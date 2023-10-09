@@ -76,32 +76,44 @@
 
 ## Summary
     * Issue
+        Determining should the app respond to changes in device orientation on devices with rotating screens. 
         Developing a calculator app is both resource-efficient and capable of utilizing most modern hardware devices. The challenge is where users could potentially add complexities when customizing their app. This would present hardware incompatibilities and might utilize heavier resources. 
     * Decision
+        The app will change it orientation with the device 
         Our calculator will utilize as little resources as possible from the hardware to perform efficiently and improve stability. More resources will be utilized as user preference grows. 
     * Status
+        Accepted
         This decision will be revisited once the initial app deployment has occurred and feedback has been gathered where to utilize more resources for certain features.
 
 ## Details
     * Assumptions
+        Devices have different screen orientations: portrait and landscape. 
         Our assumptions are that users will most likely use our application on a mobile devices.
     * Constraints
+        Some screens may not transition smoothly between orientations 
         The system must function seamlessly regardless of how the user customizes their calculator. This will put heavy strain on hardware.
     * Positions
+        Favor maintaining a consistent user interface and user experience across different orientations 
         It is important to find a balance when utilizing system resources. This is to accommodate users with both high and low end devices capabilities.
     * Argument
+        User Expectations: Users expect the app to behave naturally and adapt to the orientation of their device. 
         Making an app that takes hardware considerations should reach larger user base.
     * Implications
+        Enhanced User Experience: Proper orientation handling improves user satisfaction and usability 
         Due to the commitment to this choice, continual hardware profiling and testing is integral for both optimization and developmental process.
 
 ## Related 
     * Related decisions
+        Some hardware configurations may affect orientation handling 
         UI/UX are all strongly influenced by hardware considerations.
     * Related requirements
+        The app to change orientation even with restriction 
         To guarantee consistency, and sustainability, the system must comply to predefined performance criteria across a wide range of hardware profiles.
     * Related artifacts
+        Unknown.
         Development and improvements will be heavily influenced by hardware profiles and feedback from users.
     * Related Principles
+        Irreversible due to time constraint.
         The application must be reliable and powerful  to ensure user experience in uncompromized regardless of the hardware limitations.
 ## Notes
     Hardware considerations must always be flexible. There has to be a minimum hardware requirement threshold to have a sustainable application across the board.
