@@ -1,371 +1,150 @@
-// import { StatusBar } from 'expo-status-bar';
-// import { StyleSheet, Text, View, Switch } from 'react-native';
-// import { useState } from 'react';
-// import { ThemeContext } from './src/context/ThemeContext';
-// import { myColors } from './src/styles/Colors';
-
-// export default function App() {
-
-//   const [theme, setTheme] = useState('light');
-
-//   return (
-//     <ThemeContext.Provider value={theme}>
-//     <View style={theme === 'light' ? styles.container : [styles.container, {backgroundColor: '#000'}]}>
-//       <StatusBar style="auto" />
-//       <Switch 
-//         value={theme==='light'}
-//         onValueChange={() => setTheme(theme === 'light' ?'dark' : 'light')}/>
-
-//     </View>
-//     </ThemeContext.Provider>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: myColors.light,
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-// });
-
-//jaspreet
-
-// import { StatusBar } from 'expo-status-bar';
-// import { useColorScheme } from 'nativewind';
-// import { Pressable, StyleSheet, Switch, Text, View } from 'react-native';
- 
-// export default function App() {
-//   const { colorScheme, toggleColorScheme } = useColorScheme();
-//   return (
-//     <View style={colorScheme == 'dark' ? styles.textWhite : styles.textBlack}>
-//       <StatusBar style={colorScheme == "dark" ? "light" : "dark"} />
-//       <View>
-//         <Text>Dark Mode</Text>
-//         <Switch value={colorScheme == 'dark'} onChange={toggleColorScheme} />
-//       </View>
-//       {/* <Pressable>
-//         <Text style={colorScheme == 'dark' ? styles.textWhite : styles.textBlack}>2</Text>
-//       </Pressable>
-//       <Pressable>
-//         <Text style={colorScheme == 'dark' ? styles.textWhite : styles.textBlack}>3</Text>
-//       </Pressable> */}
-//       <Pressable style={colorScheme == 'dark' ? styles.textWhite : styles.textBlack}>
-//       <Text style={colorScheme == 'dark' ? styles.textWhite : styles.textBlack} >
-//        1
-//       </Text>
-//       </Pressable>
-//       <Pressable style={colorScheme == 'dark' ? styles.textWhite : styles.textBlack}>
-//       <Text style={colorScheme == 'dark' ? styles.textWhite : styles.textBlack} >
-//        1
-//       </Text>
-//       </Pressable>
-      
- 
-//     </View>
-//   );
-// }
- 
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
- 
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-//   textWhite: {
-//     color: 'white',
-//     backgroundColor: 'black',
-//     flex: 1,
- 
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-//   textBlack: {
-//     color: 'black',
-//     backgroundColor: 'white',
-//     flex: 1,
- 
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   }
-// });
+import React, { useState, useContext} from "react";
+import { SafeAreaView, StyleSheet, Switch, Text, View } from "react-native";
+import Button from "./components/Button";
+import Row from "./components/Row";
+import calculator, { initialState } from "./utilities/calculator";
+import { ThemeProvider, ThemeContext } from "./context/ThemeContext";
+import { themes } from "./themes/themes";
 
 
-import React, { useState } from 'react'; 
-import { StyleSheet, Text, View, TouchableOpacity } 
-	from 'react-native'; 
+// create class component of App
+const App = () => {
+  const [state, setState] = useState(initialState);
+  const { theme , toggleTheme} = useContext(ThemeContext);
 
-export default function App() { 
+  const handleTap = (type, value) => {
+    setState(calculator(type, value, state));
+  };
 
-	// State variables 
-	const [displayValue, setDisplayValue] = useState('0'); 
-	const [operator, setOperator] = useState(null); 
-	const [firstValue, setFirstValue] = useState(''); 
 
-	// Function to handle number inputs 
-	const handleNumberInput = (num) => { 
-		if (displayValue === '0') { 
-			setDisplayValue(num.toString()); 
-		} else { 
-			setDisplayValue(displayValue + num); 
-		} 
-	}; 
+  const isThemeDark = theme === themes.dark;
 
-	// Function to handle operator inputs 
-	const handleOperatorInput = (operator) => { 
-		setOperator(operator); 
-		setFirstValue(displayValue); 
-		setDisplayValue('0'); 
-	}; 
+  return (
+      <View style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
+        {/* Status bae here */}
+        <SafeAreaView style={[styles.safeArea, {backgroundColor: theme.backgroundColor}]}>
+          <View style={styles.switchContainer}>
+            <Switch
+              trackColor={{ false: theme.buttonColorFalse, true: theme.buttonColorTrue }}
+              thumbColor={isThemeDark ? theme.thumbColorDark : theme.thumbColorLight}
+              onValueChange={toggleTheme}
+              value={isThemeDark}
+            />
+          </View>
+          <Text style={[styles.value, { color: "black"}]}>
+            {parseFloat(state.currentValue).toLocaleString()}
+          </Text>
 
-	// Function to handle equal button press 
-	const handleEqual = () => { 
-		const num1 = parseFloat(firstValue); 
-		const num2 = parseFloat(displayValue); 
+          {/* Do create componentRow */}
+          <Row>
+            <Button
+              text="C"
+              theme="secondary"
+              onPress={() => handleTap("clear")}
+            />
 
-		if (operator === '+') { 
-			setDisplayValue((num1 + num2).toString()); 
-		} else if (operator === '-') { 
-			setDisplayValue((num1 - num2).toString()); 
-		} else if (operator === '*') { 
-			setDisplayValue((num1 * num2).toString()); 
-		} else if (operator === '/') { 
-			setDisplayValue((num1 / num2).toString()); 
-		} 
+            <Button
+              text="+/-"
+              theme="secondary"
+              onPress={() => handleTap("posneg")}
+            />
 
-		setOperator(null); 
-		setFirstValue(''); 
-	}; 
+            <Button
+              text="%"
+              theme="secondary"
+              onPress={() => handleTap("percentage")}
+            />
 
-	// Function to handle clear button press 
-	const handleClear = () => { 
-		setDisplayValue('0'); 
-		setOperator(null); 
-		setFirstValue(''); 
-	}; 
+            <Button
+              text="/"
+              theme="accent"
+              onPress={() => handleTap("operator", "/")}
+            />
+          </Row>
 
-	return ( 
-		<View style={styles.container}> 
-			<View style={styles.displayContainer}> 
-				<Text style={styles.displayText}> 
-					{displayValue} 
-				</Text> 
-			</View> 
-			<View style={styles.buttonContainer}> 
-				<View style={styles.row}> 
-					<TouchableOpacity 
-						style={styles.button} 
-						onPress={() => handleNumberInput(7)} 
-					> 
-						<Text style={styles.buttonText}>7</Text> 
-					</TouchableOpacity> 
-					<TouchableOpacity 
-						style={styles.button} 
-						onPress={() => handleNumberInput(8)} 
-					> 
-						<Text style={styles.buttonText}>8</Text> 
-					</TouchableOpacity> 
-					<TouchableOpacity 
-						style={styles.button} 
-						onPress={() => handleNumberInput(9)} 
-					> 
-						<Text style={styles.buttonText}>9</Text> 
-					</TouchableOpacity> 
-					<TouchableOpacity 
-						style={[styles.button, styles.operatorButton]} 
-						onPress={() => handleOperatorInput('/')} 
-					> 
-						<Text style={[ 
-							styles.buttonText, 
-							styles.operatorButtonText 
-						]}> 
-							÷ 
-						</Text> 
-					</TouchableOpacity> 
-				</View> 
-				<View style={styles.row}> 
-					<TouchableOpacity 
-						style={styles.button} 
-						onPress={() => handleNumberInput(4)} 
-					> 
-						<Text style={styles.buttonText}>4</Text> 
-					</TouchableOpacity> 
-					<TouchableOpacity 
-						style={styles.button} 
-						onPress={() => handleNumberInput(5)} 
-					> 
-						<Text style={styles.buttonText}>5</Text> 
-					</TouchableOpacity> 
-					<TouchableOpacity 
-						style={styles.button} 
-						onPress={() => handleNumberInput(6)} 
-					> 
-						<Text style={styles.buttonText}>6</Text> 
-					</TouchableOpacity> 
-					<TouchableOpacity 
-						style={[styles.button, styles.operatorButton]} 
-						onPress={() => handleOperatorInput('*')} 
-					> 
-						<Text style={[ 
-							styles.buttonText, 
-							styles.operatorButtonText 
-						]}> 
-							× 
-						</Text> 
-					</TouchableOpacity> 
-				</View> 
-				<View style={styles.row}> 
-					<TouchableOpacity 
-						style={styles.button} 
-						onPress={() => handleNumberInput(1)} 
-					> 
-						<Text style={styles.buttonText}>1</Text> 
-					</TouchableOpacity> 
-					<TouchableOpacity 
-						style={styles.button} 
-						onPress={() => handleNumberInput(2)} 
-					> 
-						<Text style={styles.buttonText}>2</Text> 
-					</TouchableOpacity> 
-					<TouchableOpacity 
-						style={styles.button} 
-						onPress={() => handleNumberInput(3)} 
-					> 
-						<Text style={styles.buttonText}>3</Text> 
-					</TouchableOpacity> 
-					<TouchableOpacity 
-						style={[styles.button, styles.operatorButton]} 
-						onPress={() => handleOperatorInput('-')} 
-					> 
-						<Text style={[ 
-							styles.buttonText, 
-							styles.operatorButtonText 
-						]}> 
-							− 
-						</Text> 
-					</TouchableOpacity> 
-				</View> 
-				<View style={styles.row}> 
-					<TouchableOpacity 
-						style={[styles.button, styles.zeroButton]} 
-						onPress={() => handleNumberInput(0)} 
-					> 
-						<Text style={[ 
-							styles.buttonText, 
-							styles.zeroButtonText 
-						]}> 
-							0 
-						</Text> 
-					</TouchableOpacity> 
-					<TouchableOpacity 
-						style={[styles.button, styles.operatorButton]} 
-						onPress={() => handleOperatorInput('+')} 
-					> 
-						<Text style={[ 
-							styles.buttonText, 
-							styles.operatorButtonText 
-						]}> 
-							+ 
-						</Text> 
-					</TouchableOpacity> 
-					<TouchableOpacity 
-						style={styles.equalButton} 
-						onPress={handleEqual} 
-					> 
-						<Text style={styles.equalButtonText}>=</Text> 
-					</TouchableOpacity> 
-				</View> 
-				<TouchableOpacity 
-					style={styles.clearButton} 
-					onPress={handleClear}> 
-					<Text style={styles.clearButtonText}>C</Text> 
-				</TouchableOpacity> 
-			</View> 
-		</View> 
-	); 
-} 
+          {/* Number */}
+          <Row>
+            <Button text="7" onPress={() => handleTap("number", 7)} />
+            <Button text="8" onPress={() => handleTap("number", 8)} />
+            <Button text="9" onPress={() => handleTap("number", 9)} />
+            <Button
+              text="X"
+              theme="accent"
+              onPress={() => handleTap("operator", "*")}
+            />
+          </Row>
 
-// Styles 
-const styles = StyleSheet.create({ 
-	container: { 
-		flex: 1, 
-		backgroundColor: '#f5f5f5', 
-		alignItems: 'center', 
-		justifyContent: 'center', 
-	}, 
-	displayContainer: { 
-		flex: 2, 
-		justifyContent: 'flex-end', 
-		alignItems: 'flex-end', 
-		padding: 20, 
-	}, 
-	displayText: { 
-		fontSize: 48, 
-		color: '#333', 
-	}, 
-	buttonContainer: { 
-		flex: 3, 
-		width: '80%', 
-	}, 
-	row: { 
-		flex: 1, 
-		flexDirection: 'row', 
-		justifyContent: 'space-between', 
-		marginBottom: 10, 
-	}, 
-	button: { 
-		flex: 1, 
-		borderRadius: 50, 
-		alignItems: 'center', 
-		justifyContent: 'center', 
-		backgroundColor: '#fff', 
-		elevation: 3, 
-		margin: 2, 
-		padding: 15, 
-	}, 
-	buttonText: { 
-		fontSize: 34, 
-		color: '#333', 
-	}, 
-	zeroButton: { 
-		flex: 2, 
-		paddingLeft: 35, 
-		paddingRight: 35, 
-	}, 
-	zeroButtonText: { 
-		marginLeft: 10, 
-	}, 
-	operatorButton: { 
-		backgroundColor: '#f0f0f0', 
-	}, 
-	operatorButtonText: { 
-		color: '#ff9500', 
-	}, 
-	equalButton: { 
-		flex: 1, 
-		borderRadius: 50, 
-		alignItems: 'center', 
-		justifyContent: 'center', 
-		backgroundColor: '#ff9500', 
-		elevation: 3, 
-	}, 
-	equalButtonText: { 
-		fontSize: 32, 
-		color: '#fff', 
-	}, 
-	clearButton: { 
-		borderRadius: 50, 
-		alignItems: 'center', 
-		justifyContent: 'center', 
-		backgroundColor: '#f0f0f0', 
-		marginTop: 10, 
-		elevation: 3, 
-		padding: 10, 
-	}, 
-	clearButtonText: { 
-		fontSize: 24, 
-		color: '#333', 
-	}, 
+          <Row>
+            <Button text="5" onPress={() => handleTap("number", 5)} />
+            <Button text="6" onPress={() => handleTap("number", 6)} />
+            <Button text="7" onPress={() => handleTap("number", 7)} />
+            <Button
+              text="-"
+              theme="accent"
+              onPress={() => handleTap("operator", "-")}
+            />
+          </Row>
+
+          <Row>
+            <Button text="1" onPress={() => handleTap("number", 1)} />
+            <Button text="2" onPress={() => handleTap("number", 2)} />
+            <Button text="3" onPress={() => handleTap("number", 3)} />
+            <Button
+              text="+"
+              theme="accent"
+              onPress={() => handleTap("operator", "+")}
+            />
+          </Row>
+
+          <Row>
+            <Button text="0" onPress={() => handleTap("number", 0)} />
+            <Button text="." onPress={() => handleTap("number", ".")} />
+            <Button
+              text="="
+              theme="primary"
+              onPress={() => handleTap("equal", "=")}
+            />
+          </Row>
+        </SafeAreaView>
+      </View>
+  );
+};
+
+
+// create styles of app
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "flex-end",
+
+  },
+  value: {
+    fontSize: 80,
+    textAlign: "right",
+    marginRight: 20,
+    marginBottom: 10,
+  },
+  safeArea: {
+    flexGrow: 1,
+    marginTop: 10,
+    justifyContent: "flex-end",
+  },
+
+  switchContainer: {
+    margin: 10,
+    position: "absolute",
+    top: 0,
+    right: 0,
+    
+  },
 });
+
+//wrap App with ThemeProvider
+
+const ThemedApp = () => (
+  <ThemeProvider>
+    <App />
+  </ThemeProvider>
+);
+
+export default ThemedApp;
