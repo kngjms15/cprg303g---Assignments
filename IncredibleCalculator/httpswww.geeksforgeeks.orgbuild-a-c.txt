@@ -1,3 +1,0 @@
-https://www.geeksforgeeks.org/build-a-calculator-using-react-native/
-
-example full application DONOT USE!!!
