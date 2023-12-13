@@ -1,9 +1,10 @@
 export const themes = {
     dark: {
-      background: '#121212', 
+      mode: 'dark',
+      background: '#000000', 
       text: '#E8E6E3', 
       textSecondary: '#1F1F1F', 
-      border: '#282828', 
+      border: '#8a8888', 
       button: '#1E1E1E', 
       buttonDouble: '#333333', 
       buttonSecondary: '#2A2A2A', 
@@ -17,6 +18,7 @@ export const themes = {
     },
   
     light: {
+      mode: 'light',
       background: '#FFFFFF', 
       text: '#1F1F1F', 
       textSecondary: '#7F7F7F',

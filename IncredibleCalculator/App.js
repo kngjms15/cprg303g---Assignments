@@ -9,29 +9,30 @@ import { themes } from "./themes/themes";
 
 // create class component of App
 const App = () => {
+  // create state
   const [state, setState] = useState(initialState);
-  const { theme , toggleTheme} = useContext(ThemeContext);
 
+  // create theme context
+  const { theme , toggleTheme} = useContext(ThemeContext); 
+
+  // create handleTap function
   const handleTap = (type, value) => {
-    setState(calculator(type, value, state));
+    setState(calculator(type, value, state)); 
   };
 
-
-  const isThemeDark = theme === themes.dark;
-
   return (
-      <View style={[styles.container, {backgroundColor: theme.backgroundColor}]}>
+      <View style={styles.container} backgroundColor={theme.background}>
         {/* Status bae here */}
-        <SafeAreaView style={[styles.safeArea, {backgroundColor: theme.backgroundColor}]}>
-          <View style={styles.switchContainer}>
+        <SafeAreaView style={styles.safeArea}>
+          <View style={styles.switchContainer}> 
             <Switch
-              trackColor={{ false: theme.buttonColorFalse, true: theme.buttonColorTrue }}
-              thumbColor={isThemeDark ? theme.thumbColorDark : theme.thumbColorLight}
+              trackColor={{ false: theme.trackColorFalse, true: theme.trackColorTrue }}
+              thumbColor={theme.mode === "dark" ? theme.thumbColorDark : theme.thumbColorLight}
               onValueChange={toggleTheme}
-              value={isThemeDark}
+              value={theme.mode === "dark" ? true : false}
             />
           </View>
-          <Text style={[styles.value, { color: "black"}]}>
+          <Text style={[styles.value, {color: theme.text}]}>
             {parseFloat(state.currentValue).toLocaleString()}
           </Text>
 
@@ -116,6 +117,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "flex-end",
+    backgroundColor: themes.backgroundColor,
 
   },
   value: {
@@ -126,7 +128,7 @@ const styles = StyleSheet.create({
   },
   safeArea: {
     flexGrow: 1,
-    marginTop: 10,
+    marginTop: 20,
     justifyContent: "flex-end",
   },
 
@@ -135,7 +137,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 0,
     right: 0,
-    
   },
 });
 

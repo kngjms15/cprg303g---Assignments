@@ -3,17 +3,19 @@ import React from "react";
 import { ThemeContext } from "../context/ThemeContext";
 import { useContext } from "react";
 
+// create functional component of Button
 const Button = ({ onPress, text, size, theme }) => {
 
   // use theme from the context
   const { theme: currentTheme } = useContext(ThemeContext);
 
-
+  // create dynamic styles
   const dynamicButtonStyles = {
     backgroundColor: currentTheme.button,
     borderColor: currentTheme.border,
   };
 
+  // create dynamic text styles
   const dynamictextStyles = {
     color: currentTheme.text,
   };
@@ -22,11 +24,12 @@ const Button = ({ onPress, text, size, theme }) => {
   const buttonStyles = [
     styles.button, 
     dynamicButtonStyles,
-    size === "double" && styles.buttonDouble,
+    size === "double" && styles.buttonDouble, 
     theme === "secondary" && styles.buttonSecondary,
     theme === "accent" && styles.buttonAccent,
   ];
 
+  // combine default styles with theme-dependent styles
   const textStyles = [
     styles.text,
     dynamictextStyles,  
@@ -35,6 +38,7 @@ const Button = ({ onPress, text, size, theme }) => {
 
 
   return (
+    // create touchable opacity
     <TouchableOpacity onPress={onPress} style={buttonStyles}>
       <Text style={textStyles}>{text}</Text>
     </TouchableOpacity>
@@ -46,6 +50,7 @@ const screen = Dimensions.get("window");
 const buttonWidth = screen.width / 4;
 
 const styles = StyleSheet.create({
+  // create container
   button: {
     flex: 1,
     height: Math.floor(buttonWidth - 10),
@@ -55,10 +60,11 @@ const styles = StyleSheet.create({
     borderWidth: 4,
     margin: 5,
   },
+  // create text
   text: {
     fontSize: 24,
   },
-
+  // create button double
   buttonDouble: {
     width: screen.width / 2 - 10,
     flex: 0,
