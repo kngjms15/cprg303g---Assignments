@@ -2,16 +2,16 @@
 // initial state
 export const initialState = {
     currentValue: "0",
-    operator: null,
-    previousValue: null,
+    operator: null,// +, -, *, /
+    previousValue: null,  
   };
   // handle number function
   export const handleNumber = (value, state) => {
-    if (state.currentValue === "0") {
+    if (state.currentValue === "0") { // if current value is 0, return value
       return { currentValue: `${value}` };
     }
   
-    return {
+    return {// if current value is not 0, return current value + value
       currentValue: `${state.currentValue}${value}`,
     };
   };
